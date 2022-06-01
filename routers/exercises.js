@@ -50,25 +50,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET exercises by legs
-router.get("/equipment/:equipment/legs", async (req, res) => {
-  const options = {
-    method: "GET",
-    url: "https://exercisedb.p.rapidapi.com/exercises/equipment/body%20weight",
-    headers: {
-      "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      "X-RapidAPI-Key": "d067087cb5msh916566a37810f52p163719jsnf04db4e1577b",
-    },
-  };
-
-  try {
-    const { data } = await axios.request(options, {
-      where: { bodyPart: "upper legs" },
-    });
-    res.status(200).send(data);
-  } catch (err) {
-    res.status(500).send("connection errors");
-  }
-});
-
 module.exports = router;
