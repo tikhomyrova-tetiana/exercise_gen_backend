@@ -36,6 +36,12 @@ module.exports = (sequelize, DataTypes) => {
       gender: {
         type: DataTypes.STRING,
       },
+      photo: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue:
+          "https://i0.wp.com/i.pinimg.com/474x/58/f2/de/58f2de50bad0fb24c24d4757841d57c4.jpg",
+      },
     },
     {
       sequelize,

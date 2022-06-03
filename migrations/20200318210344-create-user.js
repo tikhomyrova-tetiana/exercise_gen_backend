@@ -27,6 +27,10 @@ module.exports = {
       gender: {
         type: Sequelize.STRING,
       },
+      photo: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
