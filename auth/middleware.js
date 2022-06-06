@@ -4,11 +4,12 @@ const { toData } = require("./jwt");
 async function auth(req, res, next) {
   const auth =
     req.headers.authorization && req.headers.authorization.split(" ");
-
+  // A request with HTTPie including this header with a token looks something like this:
+  // $ http :4000/some-endpoint Authorization:"Bearer <token>"
   if (!auth || !(auth[0] === "Bearer") || !auth[1]) {
     return res.status(401).send({
       message:
-        "This endpoint requires an Authorization header with a valid token"
+        "This endpoint requires an Authorization header with a valid token",
     });
   }
 
@@ -39,7 +40,7 @@ async function auth(req, res, next) {
 
       default:
         return res.status(400).send({
-          message: "Something went wrong, sorry"
+          message: "Something went wrong, sorry",
         });
     }
   }
