@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { Router } = require("express");
-const authMiddleware = require("./auth");
+const authMiddleware = require("../auth/middleware");
 const Favourites = require("../models").userexercise;
 const Exercises = require("../models").exercise;
 
@@ -27,23 +27,30 @@ router.get("/equipment/:equipment", async (req, res) => {
 // Create a new exercise
 router.post("/favourites", authMiddleware, async (req, res) => {
   try {
-    const { exerciseId } = req.body;
+    const { apiId } = req.body;
     const userId = req.user.id;
 
+    // first need to add this apiId to exercise
+
+    let exercise = await Exercises.findOne({ where: { apiId: apiId } });
+    if (!exercise) {
+      exercise = await Exercises.create({ apiId: apiId });
+    }
+    const oldFavourite = await Favourites.findOne({
+      where: { exerciseId: exercise.id, userId: userId },
+    });
+    if (oldFavourite) {
+      res.status(400).send("Favorite already exist");
+      return;
+    }
     const newFavourite = await Favourites.create({
       userId: userId,
-      exerciseId: exerciseId,
+      exerciseId: exercise.id,
     });
 
-    const exercise = await Exercises.findAll({ where: { apiId: exerciseId } });
-    if (exercise) {
-      res.status(400).send("Exercise already exist");
-    }
-    const newExercise = await Exercises.create({ apiId: exerciseId });
     res.send(newFavourite);
-    res.send(newExercise);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
   /* body = {
         userId: req.user USING MIDDLE WARE
