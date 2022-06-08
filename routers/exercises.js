@@ -86,6 +86,29 @@ router.get("/completed", authMiddleware, async (req, res, next) => {
   }
 });
 
+router.post("/completed", authMiddleware, async (req, res) => {
+  try {
+    const { apiId, name, bodyPart } = req.body;
+    const userId = req.user.id;
+    // first need to add this apiId to exercise
+    let exercise = await Exercises.findOne({ where: { apiId: apiId } });
+    if (!exercise) {
+      exercise = await Exercises.create({ apiId: apiId });
+    }
+
+    const newCompleted = await Completed.create({
+      userId: userId,
+      exerciseId: exercise.id,
+      name: name,
+      bodyPart: bodyPart,
+    });
+
+    res.send(newCompleted);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;
 
 // router.get("/", async (req, res, next) => {
