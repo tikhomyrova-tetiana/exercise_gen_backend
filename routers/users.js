@@ -9,6 +9,9 @@ userRouter.patch("/:id", async (req, res, next) => {
   try {
     const { name, email, age, gender, photo, password } = req.body;
     const { id } = req.params;
+
+    console.log(name, email, age, gender, photo);
+
     const user = await User.findByPk(id);
     const updatedUser = await user.update({
       name: name,
