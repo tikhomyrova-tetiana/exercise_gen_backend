@@ -3,6 +3,7 @@ const { Router } = require("express");
 const authMiddleware = require("../auth/middleware");
 const Favourites = require("../models").userexercise;
 const Exercises = require("../models").exercise;
+const Completed = require("../models").completedexercise;
 
 const router = new Router();
 
@@ -24,8 +25,10 @@ router.get("/equipment/:equipment", async (req, res) => {
   }
 });
 
+// to check this route:
+// first do this request   http POST :4000/auth/login email=test@test.com password=test1234
 // Create a new exercise
-// http POST :4000/exercises/favourites apiId=3201 Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1NDYwMzA4NSwiZXhwIjoxNjU0NjEwMjg1fQ.UnQi0wnvUexY1xC3BAh_OpbyzJsgIXCd2bxKJrpg4M0"
+// get token and then do this    http POST :4000/exercises/favourites apiId=3201 Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1NDYwMzA4NSwiZXhwIjoxNjU0NjEwMjg1fQ.UnQi0wnvUexY1xC3BAh_OpbyzJsgIXCd2bxKJrpg4M0"
 router.post("/favourites", authMiddleware, async (req, res) => {
   try {
     const { apiId } = req.body;
@@ -69,6 +72,22 @@ router.get("/favourites", authMiddleware, async (req, res, next) => {
   }
 });
 
+// http GET :4000/exercises/completed Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1NDY5MzUyOCwiZXhwIjoxNjU0NzAwNzI4fQ.bMJ3vM0bO6yjLrYBWOTSZjNjH4jRboA8dEHs-EX41bs"
+router.get("/completed", authMiddleware, async (req, res, next) => {
+  // Add authmiddleware to get user id and then find only favorites of this user
+  const userId = req.user.id;
+  try {
+    const allCompleted = await Completed.findAll({
+      where: { userId: userId },
+    });
+    res.send(allCompleted);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+module.exports = router;
+
 // router.get("/", async (req, res, next) => {
 //   try {
 
@@ -94,5 +113,3 @@ router.get("/favourites", authMiddleware, async (req, res, next) => {
 //     console.log("error".err);
 //   }
 // });
-
-module.exports = router;

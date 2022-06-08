@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         through: "userexercises",
         foreignKey: "exerciseId",
       });
+      exercise.belongsToMany(models.user, {
+        through: "completedexercises",
+        foreignKey: "exerciseId",
+      });
     }
   }
   exercise.init(

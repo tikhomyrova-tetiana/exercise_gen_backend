@@ -2,12 +2,12 @@ const express = require("express");
 const { Router } = express;
 const userRouter = new Router();
 const User = require("../models").user;
-const bcrypt = require("bcrypt");
-const { SALT_ROUNDS } = require("../config/constants");
+// const bcrypt = require("bcrypt");
+// const { SALT_ROUNDS } = require("../config/constants");
 
 userRouter.patch("/:id", async (req, res, next) => {
   try {
-    const { name, email, age, gender, photo, password } = req.body;
+    const { name, email, age, gender, photo } = req.body;
     const { id } = req.params;
 
     console.log(name, email, age, gender, photo);
@@ -21,11 +21,11 @@ userRouter.patch("/:id", async (req, res, next) => {
       photo: photo,
     });
 
-    if (password) {
-      await user.update({
-        password: bcrypt.hashSync(password, SALT_ROUNDS),
-      });
-    }
+    // if (password) {
+    //   await user.update({
+    //     password: bcrypt.hashSync(password, SALT_ROUNDS),
+    //   });
+    // }
 
     res.send(updatedUser);
   } catch (error) {
