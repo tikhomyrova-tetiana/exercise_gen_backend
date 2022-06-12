@@ -72,6 +72,25 @@ router.get("/favourites", authMiddleware, async (req, res, next) => {
   }
 });
 
+// http DELETE :4000/exercises/favourites/3201 Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1NTA0OTA4NiwiZXhwIjoxNjU1MDU2Mjg2fQ.EIn-TYk9n9eGdgq8BHBq2g592xugCXBRS0h46_YoB8Y"
+router.delete("/favourites/:id", authMiddleware, async (req, res, next) => {
+  const userId = req.user.id;
+  const { id } = req.params;
+  try {
+    const favouriteToDelete = await Favourites.findOne({
+      where: { userId: userId },
+      include: { model: Exercises, where: { apiId: id } },
+    });
+    if (!favouriteToDelete)
+      return res.status(404).send(`no favourites with id ${id} found`);
+
+    await favouriteToDelete.destroy();
+    return res.status(200).send({ message: `favourite ${id} removed` });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 // http GET :4000/exercises/completed Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1NDY5MzUyOCwiZXhwIjoxNjU0NzAwNzI4fQ.bMJ3vM0bO6yjLrYBWOTSZjNjH4jRboA8dEHs-EX41bs"
 router.get("/completed", authMiddleware, async (req, res, next) => {
   // Add authmiddleware to get user id and then find only favorites of this user
