@@ -4,17 +4,16 @@ const authMiddleware = require("../auth/middleware");
 const Favourites = require("../models").userexercise;
 const Exercises = require("../models").exercise;
 const Completed = require("../models").completedexercise;
+const { EXT_API } = require("../config/constants");
+const { HEADERS } = require("../config/constants");
 
 const router = new Router();
 
 router.get("/equipment/:equipment", async (req, res) => {
   const options = {
     method: "GET",
-    url: "https://exercisedb.p.rapidapi.com/exercises/equipment/body%20weight",
-    headers: {
-      "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      "X-RapidAPI-Key": "d067087cb5msh916566a37810f52p163719jsnf04db4e1577b",
-    },
+    url: `${EXT_API}/exercises/equipment/body%20weight`,
+    headers: HEADERS,
   };
 
   try {

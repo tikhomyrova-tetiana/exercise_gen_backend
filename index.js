@@ -10,7 +10,7 @@ const { PORT } = require("./config/constants");
 
 // Create an express app
 const app = express();
-
+require("dotenv").config();
 /**
  * Middlewares
  *
@@ -55,7 +55,7 @@ app.post("/authorized_post_request", authMiddleWare, (req, res) => {
     },
   });
 });
-
+// console.log(process.env);
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
